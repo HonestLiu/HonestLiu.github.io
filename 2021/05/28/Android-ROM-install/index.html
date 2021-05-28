@@ -1,0 +1,353 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width,initial-scale=1"><title>纯净安装开源安卓ROM | 誠的个人站</title><meta name="keywords" content="Android"><meta name="author" content="HonestLiu"><meta name="copyright" content="HonestLiu"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="基本要求 确保您的计算机具有adb和fastboot。跳转—&gt;教程。 在设备上启用USB调试  解锁引导程序注意：以下步骤仅需要在每个设备上运行一次。 警告 警告：解锁引导加载程序将擦除设备上的所有数据！在继续操作之前，请确保已将要保留的数据做好备份 以小米手机为例  在小米官网创建一个Mi帐户，并申请解锁 提示：每个小米账号仅允许一个帐户30天解锁一台设备。  将电话号码添加到您的Mi帐户">
+<meta property="og:type" content="article">
+<meta property="og:title" content="纯净安装开源安卓ROM">
+<meta property="og:url" content="https://honestliu.github.io/2021/05/28/Android-ROM-install/index.html">
+<meta property="og:site_name" content="誠的个人站">
+<meta property="og:description" content="基本要求 确保您的计算机具有adb和fastboot。跳转—&gt;教程。 在设备上启用USB调试  解锁引导程序注意：以下步骤仅需要在每个设备上运行一次。 警告 警告：解锁引导加载程序将擦除设备上的所有数据！在继续操作之前，请确保已将要保留的数据做好备份 以小米手机为例  在小米官网创建一个Mi帐户，并申请解锁 提示：每个小米账号仅允许一个帐户30天解锁一台设备。  将电话号码添加到您的Mi帐户">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/Custom-Android-ROMs.jpg">
+<meta property="article:published_time" content="2021-05-28T13:23:54.000Z">
+<meta property="article:modified_time" content="2021-05-28T13:35:32.162Z">
+<meta property="article:author" content="HonestLiu">
+<meta property="article:tag" content="Android">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/Custom-Android-ROMs.jpg"><link rel="shortcut icon" href="https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/favicon.ico"><link rel="canonical" href="https://honestliu.github.io/2021/05/28/Android-ROM-install/"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//hm.baidu.com"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css" media="print" onload="this.media='all'"><script>var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?d4ff553be0391be8fdf3b3ade2804cef";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script><script>const GLOBAL_CONFIG = { 
+  root: '/',
+  algolia: undefined,
+  localSearch: {"path":"search.xml","languages":{"hits_empty":"找不到您查询的内容：${query}"}},
+  translate: undefined,
+  noticeOutdate: undefined,
+  highlight: {"plugin":"highlighjs","highlightCopy":true,"highlightLang":true},
+  copy: {
+    success: '复制成功',
+    error: '复制错误',
+    noSupport: '浏览器不支持'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  date_suffix: {
+    just: '刚刚',
+    min: '分钟前',
+    hour: '小时前',
+    day: '天前',
+    month: '个月前'
+  },
+  copyright: undefined,
+  lightbox: 'fancybox',
+  Snackbar: undefined,
+  source: {
+    jQuery: 'https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js',
+    justifiedGallery: {
+      js: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/js/jquery.justifiedGallery.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/justifiedGallery/dist/css/justifiedGallery.min.css'
+    },
+    fancybox: {
+      js: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js',
+      css: 'https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.css'
+    }
+  },
+  isPhotoFigcaption: false,
+  islazyload: false,
+  isanchor: false
+};
+
+const saveToLocal = {
+  // ttl 單位是 天
+  set: function setWithExpiry(key, value, ttl) {
+    if (ttl === 0) return
+    const now = new Date()
+    const expiryDay = ttl * 86400000
+    const item = {
+      value: value,
+      expiry: now.getTime() + expiryDay,
+    }
+    localStorage.setItem(key, JSON.stringify(item))
+  },
+
+  get: function getWithExpiry(key) {
+    const itemStr = localStorage.getItem(key)
+
+    if (!itemStr) {
+      return undefined
+    }
+    const item = JSON.parse(itemStr)
+    const now = new Date()
+
+    if (now.getTime() > item.expiry) {
+      localStorage.removeItem(key)
+      return undefined
+    }
+    return item.value
+  }
+}
+
+// https://stackoverflow.com/questions/16839698/jquery-getscript-alternative-in-native-javascript
+const getScript = url => new Promise((resolve, reject) => {
+  const script = document.createElement('script')
+  script.src = url
+  script.async = true
+  script.onerror = reject
+  script.onload = script.onreadystatechange = function() {
+    const loadState = this.readyState
+    if (loadState && loadState !== 'loaded' && loadState !== 'complete') return
+    script.onload = script.onreadystatechange = null
+    resolve()
+  }
+  document.head.appendChild(script)
+})</script><script id="config_change">var GLOBAL_CONFIG_SITE = { 
+  isPost: true,
+  isHome: false,
+  isHighlightShrink: false,
+  isToc: true,
+  postUpdate: '2021-05-28 21:35:32'
+}</script><noscript><style type="text/css">
+  #nav {
+    opacity: 1
+  }
+  .justified-gallery img {
+    opacity: 1
+  }
+
+  #recent-posts time,
+  #post-meta time {
+    display: inline !important
+  }
+</style></noscript><script>(function () {  window.activateDarkMode = function () {
+    document.documentElement.setAttribute('data-theme', 'dark')
+    if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+    }
+  }
+  window.activateLightMode = function () {
+    document.documentElement.setAttribute('data-theme', 'light')
+   if (document.querySelector('meta[name="theme-color"]') !== null) {
+      document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+    }
+  }
+  const autoChangeMode = 'false'
+  const t = saveToLocal.get('theme')
+  if (autoChangeMode === '1') {
+    const isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches
+    const isLightMode = window.matchMedia('(prefers-color-scheme: light)').matches
+    const isNotSpecified = window.matchMedia('(prefers-color-scheme: no-preference)').matches
+    const hasNoSupport = !isDarkMode && !isLightMode && !isNotSpecified
+    if (t === undefined) {
+      if (isLightMode) activateLightMode()
+      else if (isDarkMode) activateDarkMode()
+      else if (isNotSpecified || hasNoSupport) {
+        const now = new Date()
+        const hour = now.getHours()
+        const isNight = hour <= 6 || hour >= 18
+        isNight ? activateDarkMode() : activateLightMode()
+      }
+      window.matchMedia('(prefers-color-scheme: dark)').addListener(function (e) {
+        if (saveToLocal.get('theme') === undefined) {
+          e.matches ? activateDarkMode() : activateLightMode()
+        }
+      })
+    } else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else if (autoChangeMode === '2') {
+    const now = new Date()
+    const hour = now.getHours()
+    const isNight = hour <= 6 || hour >= 18
+    if (t === undefined) isNight ? activateDarkMode() : activateLightMode()
+    else if (t === 'light') activateLightMode()
+    else activateDarkMode()
+  } else {
+    if (t === 'dark') activateDarkMode()
+    else if (t === 'light') activateLightMode()
+  }const asideStatus = saveToLocal.get('aside-status')
+if (asideStatus !== undefined) {
+   if (asideStatus === 'hide') {
+     document.documentElement.classList.add('hide-aside')
+   } else {
+     document.documentElement.classList.remove('hide-aside')
+   }
+}})()</script><link rel="stylesheet" href="/css/bilibili.css"><meta name="generator" content="Hexo 5.3.0"></head><body><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="author-avatar"><img class="avatar-img" src="https://cdn.jsdelivr.net/gh/HonestLiu/Gallery@master/%E5%A4%B4%E5%83%8F%20(1).jpg" onerror="onerror=null;src='https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/friend_404.gif'" alt="avatar"/></div><div class="site-data"><div class="data-item is-center"><div class="data-item-link"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a></div></div><div class="data-item is-center"><div class="data-item-link"><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a></div></div></div><hr/></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header" style="background-image: url('https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/Custom-Android-ROMs.jpg')"><nav id="nav"><span id="blog_name"><a id="site-name" href="/">誠的个人站</a></span><div id="menus"><div id="search-button"><a class="site-page social-icon search"><i class="fas fa-search fa-fw"></i><span> 搜索</span></a></div><div id="toggle-menu"><a class="site-page"><i class="fas fa-bars fa-fw"></i></a></div></div></nav><div id="post-info"><h1 class="post-title">纯净安装开源安卓ROM</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">发表于</span><time class="post-meta-date-created" datetime="2021-05-28T13:23:54.000Z" title="发表于 2021-05-28 21:23:54">2021-05-28</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">更新于</span><time class="post-meta-date-updated" datetime="2021-05-28T13:35:32.162Z" title="更新于 2021-05-28 21:35:32">2021-05-28</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv"><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">阅读量:</span><span id="busuanzi_value_page_pv"></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="post-content" id="article-container"><h2 id="基本要求"><a href="#基本要求" class="headerlink" title="基本要求"></a>基本要求</h2><ol>
+<li>确保您的计算机具有<code>adb</code>和<code>fastboot</code>。跳转—&gt;<a href="https://honestliu.github.io/2021/05/25/ADB/">教程</a>。</li>
+<li>在设备上启用USB调试</li>
+</ol>
+<h2 id="解锁引导程序"><a href="#解锁引导程序" class="headerlink" title="解锁引导程序"></a>解锁引导程序</h2><p><strong>注意：</strong>以下步骤仅需要在每个设备上运行一次。</p>
+<p><em>警告</em></p>
+<p><strong>警告：</strong>解锁引导加载程序将擦除设备上的所有数据！在继续操作之前，请确保已将要保留的数据做好备份</p>
+<p><strong>以小米手机为例</strong></p>
+<ol>
+<li><p>在小米官网创建一个Mi帐户，并申请解锁</p>
+<p><strong>提示</strong>：每个小米账号仅允许一个帐户30天解锁一台设备。</p>
+</li>
+<li><p>将电话号码添加到您的Mi帐户。</p>
+</li>
+<li><p>将SIM卡插入手机。</p>
+</li>
+<li><p>反复点击以启用<strong>设置</strong>中<strong>关于手机</strong>的开发人员选项<code>MIUI 版本号</code>。</p>
+</li>
+<li><p>然后到<code>设置</code>—&gt; <code>更多设置</code>—&gt; <code>开发者选项</code>中查看解锁状态并绑定账号</p>
+</li>
+<li><p>下载<a target="_blank" rel="noopener" href="https://www.miui.com/unlock/download.html">Mi Unlock应用程序</a>（运行该应用程序需要Windows）。</p>
+</li>
+<li><p>运行Mi Unlock应用程序，然后按照应用程序提供的说明进行操作。</p>
+</li>
+<li><p>成功验证设备和Mi帐户后，解锁引导加载程序。</p>
+</li>
+<li><p>由于设备已完全重置，因此您需要重新启用USB调试才能继续。</p>
+</li>
+</ol>
+<h2 id="使用安装自定义恢复-fastboot"><a href="#使用安装自定义恢复-fastboot" class="headerlink" title="使用安装自定义恢复 fastboot"></a>使用安装自定义恢复 <code>fastboot</code></h2><ol>
+<li><p>下载自定义恢复-您可以下载<a target="_blank" rel="noopener" href="https://dl.twrp.me/jason">TWRP</a>。只需下载名为的最新恢复文件<code>twrp-x.x.x-x-jason.img</code>。</p>
+</li>
+<li><p>通过USB将设备连接到PC。</p>
+</li>
+<li><p>在计算机上，打开命令提示符（在Windows上）或终端（在Linux或macOS上）窗口，然后键入：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb reboot bootloader</span><br></pre></td></tr></table></figure>
+<p>您还可以通过组合键启动进入快速启动模式：</p>
+<ul>
+<li>关闭设备电源，按住<strong>音量减键</strong>+ <strong>电源键</strong>。按住两个按钮，直到屏幕上出现“ FASTBOOT”字样，然后松开。</li>
+</ul>
+</li>
+<li><p>设备进入快速启动模式后，请通过键入以下内容验证您的PC能够找到它：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fastboot devices</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong>如果<code>no permissions fastboot</code>在Linux或macOS上看到，请尝试<code>fastboot</code>以root用户身份运行。</p>
+</li>
+<li><p>快速恢复到您的设备上：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">fastboot flash recovery &lt;TWRP镜像名称&gt;.img</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong>该文件的名称可能与该命令中的名称不同，因此请进行相应的调整。</p>
+</li>
+<li><p>现在重新引导进入恢复以验证安装：</p>
+<ul>
+<li>关闭设备电源，按住<strong>音量加键</strong>+ <strong>电源键</strong>。按住两个按钮，直到“ MI”徽标出现在屏幕上，然后松开。</li>
+</ul>
+</li>
+</ol>
+<h2 id="用TWRP安装Android-ROM"><a href="#用TWRP安装Android-ROM" class="headerlink" title="用TWRP安装Android ROM"></a>用TWRP安装Android ROM</h2><ol>
+<li>下载你要安装ROM包。</li>
+</ol>
+<ul>
+<li><p>（可选）下载应用程序包附加组件，例如<strong>Google Apps</strong>（使用该<code>arm64</code>体系结构）。</p>
+<ul>
+<li><p><strong>Google Apps</strong>下载安装</p>
+<table>
+<thead>
+<tr>
+<th>安卓版本</th>
+<th>Link</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>Android 11</td>
+<td><a target="_blank" rel="noopener" href="https://androidfilehost.com/?w=files&flid=322935">MindTheGapps</a> (<a target="_blank" rel="noopener" href="http://downloads.codefi.re/jdcteam/javelinanddart/gapps">mirror</a>)</td>
+</tr>
+<tr>
+<td>Android 10</td>
+<td><a target="_blank" rel="noopener" href="https://opengapps.org/?api=10.0&variant=nano">Open GApps</a></td>
+</tr>
+<tr>
+<td>Android 9.0</td>
+<td><a target="_blank" rel="noopener" href="https://androidfilehost.com/?w=files&flid=170282">MindTheGapps</a> (<a target="_blank" rel="noopener" href="http://downloads.codefi.re/jdcteam/javelinanddart/gapps">mirror</a>), <a target="_blank" rel="noopener" href="https://opengapps.org/?api=9.0&variant=nano">Open GApps</a></td>
+</tr>
+<tr>
+<td>Android 8.1</td>
+<td><a target="_blank" rel="noopener" href="https://androidfilehost.com/?w=files&flid=170282">MindTheGapps</a> (<a target="_blank" rel="noopener" href="http://downloads.codefi.re/jdcteam/javelinanddart/gapps">mirror</a>), <a target="_blank" rel="noopener" href="https://opengapps.org/?api=8.1&variant=nano">Open GApps</a></td>
+</tr>
+<tr>
+<td>Android 7.1</td>
+<td><a target="_blank" rel="noopener" href="https://opengapps.org/?api=7.1&variant=nano">Open GApps</a></td>
+</tr>
+<tr>
+<td>Android 6.0</td>
+<td><a target="_blank" rel="noopener" href="https://opengapps.org/?api=6.0&variant=nano">Open GApps</a></td>
+</tr>
+</tbody></table>
+</li>
+</ul>
+</li>
+</ul>
+<ol start="2">
+<li>如果你不在TWRP中，请重新启动以启动TWRP：</li>
+</ol>
+<ul>
+<li>关闭设备电源，按住<strong>音量加</strong>+ <strong>电源键</strong>。按住两个按钮，直到“ MI”徽标出现在屏幕上，然后松开。（小米原来的Fastboot可能会顶掉TWRP，重新刷入即可。</li>
+</ul>
+<ol start="3">
+<li><p>现在点击<strong>Settings</strong>—&gt;<strong>球形网格图标地球🌏</strong>—&gt;<strong>chinese(Simplified)**—&gt;**set Language</strong>[中午简体设置成功]</p>
+</li>
+<li><p>现在点击<strong>清除</strong>，然后继续格式化过程(滑动滑块)。这将删除加密并删除内部存储器中存储的所有文件。</p>
+</li>
+<li><p>返回上一个菜单并点击<strong>高级清除</strong>，然后选择<em>Cache</em>和<em>System</em>分区，然后<strong>Swipe to Wipe</strong>。</p>
+</li>
+<li><p>侧加载ROM</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ROM Name.zip</span><br></pre></td></tr></table></figure>
+<p>软件包：</p>
+<ul>
+<li><p>在设备上，依次选择<strong>高级</strong>—&gt;<strong>ADB侧载</strong>然后滑动以开始侧载。</p>
+</li>
+<li><p>在主机上，使用以下命令加载软件包</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">adb sideload ROM Name.zip</span><br></pre></td></tr></table></figure>
+<p><strong>提示：</strong>如果该过程成功，输出将停止在47％并报告<code>adb: failed to read command: Success</code>。</p>
+</li>
+</ul>
+</li>
+<li><p><em>（可选）</em>：如果要安装任何加载项，请依次对这些软件包重复上述侧载步骤。</p>
+<p><strong>注意：</strong>如果要在设备上使用Google Apps插件，则必须先执行此步骤，<strong>然后才能</strong>首次启动ROM ！</p>
+</li>
+<li><p>成功安装所有组件后，请运行“ adb reboot”。</p>
+</li>
+</ol>
+<p>版权声明：</p>
+<ul>
+<li>封面图片来源于<a target="_blank" rel="noopener" href="https://www.techykeeday.com/best-custom-android-roms/">techykeeday</a></li>
+</ul>
+<p>​                 </p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span class="post-copyright-info"><a href="mailto:undefined">HonestLiu</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span class="post-copyright-info"><a href="https://honestliu.github.io/2021/05/28/Android-ROM-install/">https://honestliu.github.io/2021/05/28/Android-ROM-install/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a href="https://honestliu.github.io" target="_blank">誠的个人站</a>！</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Android/">Android</a></div><div class="post_share"><div class="social-share" data-image="https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/Custom-Android-ROMs.jpg" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/social-share.js/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/social-share.js/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><div class="next-post pull-full"><a href="/2021/05/25/ADB/"><img class="next-cover" src="https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/20210525130452.png" onerror="onerror=null;src='https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/404.jpg'" alt="cover of next post"><div class="pagination-info"><div class="label">下一篇</div><div class="next_info">使用ADB和fastboot</div></div></a></div></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span> 相关推荐</span></div><div class="relatedPosts-list"><div><a href="/2021/05/25/ADB/" title="使用ADB和fastboot"><img class="cover" src="https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/20210525130452.png" alt="cover"><div class="content is-center"><div class="date"><i class="far fa-calendar-alt fa-fw"></i> 2021-05-25</div><div class="title">使用ADB和fastboot</div></div></a></div></div></div><hr/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> 评论</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info"><div class="card-info-avatar is-center"><img class="avatar-img" src="https://cdn.jsdelivr.net/gh/HonestLiu/Gallery@master/%E5%A4%B4%E5%83%8F%20(1).jpg" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/friend_404.gif'" alt="avatar"/><div class="author-info__name">HonestLiu</div><div class="author-info__description"></div></div><div class="card-info-data"><div class="card-info-data-item is-center"><a href="/archives/"><div class="headline">文章</div><div class="length-num">12</div></a></div><div class="card-info-data-item is-center"><a href="/tags/"><div class="headline">标签</div><div class="length-num">8</div></a></div></div><a class="button--animated" id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/HonestLiu"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons is-center"><a class="social-icon" href="https://github.com/HonestLiu" target="_blank" title="Github"><i class="fab fa-github"></i></a><a class="social-icon" href="mailto:liuchengmailbox@163.com" target="_blank" title="Email"><i class="fas fa-envelope"></i></a><a class="social-icon" href="https://space.bilibili.com/275303115" target="_blank" title="bilibili"><i class="fa-youtube-play"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn card-announcement-animation"></i><span>公告</span></div><div class="announcement_content">本站永久网址:honestliu.github.io</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>目录</span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9F%BA%E6%9C%AC%E8%A6%81%E6%B1%82"><span class="toc-number">1.</span> <span class="toc-text">基本要求</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E8%A7%A3%E9%94%81%E5%BC%95%E5%AF%BC%E7%A8%8B%E5%BA%8F"><span class="toc-number">2.</span> <span class="toc-text">解锁引导程序</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BD%BF%E7%94%A8%E5%AE%89%E8%A3%85%E8%87%AA%E5%AE%9A%E4%B9%89%E6%81%A2%E5%A4%8D-fastboot"><span class="toc-number">3.</span> <span class="toc-text">使用安装自定义恢复 fastboot</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%94%A8TWRP%E5%AE%89%E8%A3%85Android-ROM"><span class="toc-number">4.</span> <span class="toc-text">用TWRP安装Android ROM</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>最新文章</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2021/05/28/Android-ROM-install/" title="纯净安装开源安卓ROM"><img src="https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/Custom-Android-ROMs.jpg" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/404.jpg'" alt="纯净安装开源安卓ROM"/></a><div class="content"><a class="title" href="/2021/05/28/Android-ROM-install/" title="纯净安装开源安卓ROM">纯净安装开源安卓ROM</a><time datetime="2021-05-28T13:23:54.000Z" title="发表于 2021-05-28 21:23:54">2021-05-28</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/05/25/ADB/" title="使用ADB和fastboot"><img src="https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/20210525130452.png" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/404.jpg'" alt="使用ADB和fastboot"/></a><div class="content"><a class="title" href="/2021/05/25/ADB/" title="使用ADB和fastboot">使用ADB和fastboot</a><time datetime="2021-05-25T03:50:59.000Z" title="发表于 2021-05-25 11:50:59">2021-05-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/02/10/SSH-%E5%90%8E%E5%8F%B0%E6%8C%81%E7%BB%AD%E8%BF%90%E8%A1%8C%E6%8C%87%E4%BB%A4/" title="SSH-后台持续运行指令"><img src="https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/%E9%9D%92%E3%80%85%E3%81%A8%E3%81%97%E3%81%A6%E3%81%84%E3%81%9F_87273600.jpg" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/404.jpg'" alt="SSH-后台持续运行指令"/></a><div class="content"><a class="title" href="/2021/02/10/SSH-%E5%90%8E%E5%8F%B0%E6%8C%81%E7%BB%AD%E8%BF%90%E8%A1%8C%E6%8C%87%E4%BB%A4/" title="SSH-后台持续运行指令">SSH-后台持续运行指令</a><time datetime="2021-02-10T03:56:52.000Z" title="发表于 2021-02-10 11:56:52">2021-02-10</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/02/08/%E6%A0%91%E8%8E%93%E6%B4%BE%E5%BC%80%E7%AE%B1%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/" title="树莓派开箱常用指令"><img src="https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/20210208140241.png" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/404.jpg'" alt="树莓派开箱常用指令"/></a><div class="content"><a class="title" href="/2021/02/08/%E6%A0%91%E8%8E%93%E6%B4%BE%E5%BC%80%E7%AE%B1%E5%B8%B8%E7%94%A8%E6%8C%87%E4%BB%A4/" title="树莓派开箱常用指令">树莓派开箱常用指令</a><time datetime="2021-02-08T05:48:30.000Z" title="发表于 2021-02-08 13:48:30">2021-02-08</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2021/02/07/Arm%E7%89%88%E7%BE%A4%E6%99%96%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85%20Transmission%20%E2%80%94DS218J/" title="Arm版群晖离线安装 Transmission —DS218J"><img src="https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/20210207083320.png" onerror="this.onerror=null;this.src='https://cdn.jsdelivr.net/gh/HonestLiu/Gallery/404.jpg'" alt="Arm版群晖离线安装 Transmission —DS218J"/></a><div class="content"><a class="title" href="/2021/02/07/Arm%E7%89%88%E7%BE%A4%E6%99%96%E7%A6%BB%E7%BA%BF%E5%AE%89%E8%A3%85%20Transmission%20%E2%80%94DS218J/" title="Arm版群晖离线安装 Transmission —DS218J">Arm版群晖离线安装 Transmission —DS218J</a><time datetime="2021-02-07T00:30:00.000Z" title="发表于 2021-02-07 08:30:00">2021-02-07</time></div></div></div></div></div></div></main><footer id="footer"><div id="footer-wrap"><div class="copyright">&copy;2020 - 2021 By HonestLiu</div><div class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo</a><span class="footer-separator">|</span><span>Themes </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly</a></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="阅读模式"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="浅色和深色模式转换"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="单栏和双栏切换"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside_config" type="button" title="设置"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="目录"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="直达评论"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="回到顶部"><i class="fas fa-arrow-up"></i></button></div></div><div id="local-search"><div class="search-dialog"><div class="search-dialog__title" id="local-search-title">本地搜索</div><div id="local-input-panel"><div id="local-search-input"><div class="local-search-box"><input class="local-search-box--input" placeholder="搜索文章" type="text"/></div></div></div><hr/><div id="local-search-results"></div><span class="search-close-button"><i class="fas fa-times"></i></span></div><div id="search-mask"></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><script src="/js/search/local-search.js"></script><div class="js-pjax"><script>function loadValine () {
+  function initValine () {
+    let initData = {
+      el: '#vcomment',
+      appId: '32xXgaiACr8libpSq8YnF2CX-gzGzoHsz',
+      appKey: 'dBR1WXxJ6L01wxrVdXoVJDDD',
+      placeholder: 'Please leave your footprints',
+      avatar: 'monsterid',
+      meta: 'nick,mail,link'.split(','),
+      pageSize: '10',
+      lang: 'zh-CN',
+      recordIP: false,
+      serverURLs: '',
+      emojiCDN: '',
+      emojiMaps: "",
+      enableQQ: false,
+      path: window.location.pathname,
+    }
+
+    if (true) { 
+      initData.requiredFields= ('nick,mail'.split(','))
+    }
+    
+    if (false) {
+      const otherData = false
+      initData = Object.assign(initData, otherData)
+    }
+    
+    const valine = new Valine(initData)
+  }
+
+  if (typeof Valine === 'function') initValine() 
+  else getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js').then(initValine)
+}
+
+if ('Valine' === 'Valine' || !false) {
+  if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+  else setTimeout(loadValine, 0)
+} else {
+  function loadOtherComment () {
+    loadValine()
+  }
+}</script></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
